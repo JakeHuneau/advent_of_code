@@ -17,12 +17,14 @@ macro_rules! timed {
 }
 
 fn main() {
+    // Get CLI arguments
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
         println!("Must have 1 arguments: <problem_number");
         exit(1);
     }
 
+    // Solve that problem
     let problem_number = args[1].parse::<usize>().expect("Could not parse argument");
     match problem_number {
         1 => {
