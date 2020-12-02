@@ -3,6 +3,7 @@ use std::process::exit;
 use std::time::Instant;
 
 mod day1;
+mod day2;
 
 // Times the function call
 macro_rules! timed {
@@ -31,11 +32,12 @@ fn main() {
             timed!(day1::main::solver);
             println!("--Bonus--");
             timed!(day1::main::solver_extra);
-            exit(1);
+        }
+        2 => {
+            timed!(day2::main::solver);
         }
         _ => {
             println!("Problem {} is not available yet", problem_number);
-            exit(1);
         }
     }
 }
