@@ -35,6 +35,8 @@ fn main() {
         }
         2 => {
             timed!(day2::main::solver);
+            println!("--Bonus--");
+            timed!(day2::main::solver_extra);
         }
         _ => {
             println!("Problem {} is not available yet", problem_number);
