@@ -4,6 +4,7 @@ use std::time::Instant;
 
 mod day1;
 mod day2;
+mod day3;
 
 // Times the function call
 macro_rules! timed {
@@ -37,6 +38,11 @@ fn main() {
             timed!(day2::main::solver);
             println!("--Bonus--");
             timed!(day2::main::solver_extra);
+        }
+        3 => {
+            timed!(day3::main::solver);
+            println!("--Bonus--");
+            timed!(day3::main::solver_extra);
         }
         _ => {
             println!("Problem {} is not available yet", problem_number);
