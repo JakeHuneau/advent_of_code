@@ -28,6 +28,44 @@ pub fn solver() {
     println!("hit {} trees", trees);
 }
 
+// Similar to the above, but we'll do each of the checks for each line
+// Use a TreeCounter object for keeping track of all those
+pub fn solver_extra() {
+    let data = parse_file::<String>("src/day3/input");
+    let mut tree_counter = data
+        .into_par_iter()
+        .enumerate()
+        .fold(
+            || TreeCounter::new(),
+            |mut tree_counter, (i, line)| {
+                if line.chars().nth(i % line.len()).unwrap() == '#' {
+                    // right 1 down 1
+                    tree_counter.inc(1);
+                }
+                if line.chars().nth(i * 3 % line.len()).unwrap() == '#' {
+                    // right 3 down 1
+                    tree_counter.inc(2);
+                }
+                if line.chars().nth(i * 5 % line.len()).unwrap() == '#' {
+                    // right 5 down 1
+                    tree_counter.inc(3);
+                }
+                if line.chars().nth(i * 7 % line.len()).unwrap() == '#' {
+                    // right 7 down 1
+                    tree_counter.inc(4);
+                }
+                if i % 2 == 0 && line.chars().nth((i / 2) % line.len()).unwrap() == '#' {
+                    // right 1 down 2
+                    tree_counter.inc(5);
+                }
+                tree_counter
+            },
+        )
+        .sum::<TreeCounter>();
+
+    println!("product of slope trees is {}", tree_counter.product())
+}
+
 // Tree counter that can increment a counter for each possible slope
 // And has a product method for multiplying all the slopes together
 struct TreeCounter {
@@ -89,42 +127,4 @@ impl Sum for TreeCounter {
             slope5: a.slope5 + b.slope5,
         })
     }
-}
-
-// Similar to the above, but we'll do each of the checks for each line
-// Use a TreeCounter object for keeping track of all those
-pub fn solver_extra() {
-    let data = parse_file::<String>("src/day3/input");
-    let mut tree_counter = data
-        .into_par_iter()
-        .enumerate()
-        .fold(
-            || TreeCounter::new(),
-            |mut tree_counter, (i, line)| {
-                if line.chars().nth(i % line.len()).unwrap() == '#' {
-                    // right 1 down 1
-                    tree_counter.inc(1);
-                }
-                if line.chars().nth(i * 3 % line.len()).unwrap() == '#' {
-                    // right 3 down 1
-                    tree_counter.inc(2);
-                }
-                if line.chars().nth(i * 5 % line.len()).unwrap() == '#' {
-                    // right 5 down 1
-                    tree_counter.inc(3);
-                }
-                if line.chars().nth(i * 7 % line.len()).unwrap() == '#' {
-                    // right 7 down 1
-                    tree_counter.inc(4);
-                }
-                if i % 2 == 0 && line.chars().nth((i / 2) % line.len()).unwrap() == '#' {
-                    // right 1 down 2
-                    tree_counter.inc(5);
-                }
-                tree_counter
-            },
-        )
-        .sum::<TreeCounter>();
-
-    println!("product of slope trees is {}", tree_counter.product())
 }
