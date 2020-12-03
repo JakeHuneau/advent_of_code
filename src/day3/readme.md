@@ -1,4 +1,4 @@
-[This one was difficult to put in a readme because of some grids](https://adventofcode.com/2020/day/3)
+[day 3](https://adventofcode.com/2020/day/3)
 
 ```
 --- Day 3: Toboggan Trajectory ---
