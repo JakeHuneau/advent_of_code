@@ -1,112 +1,54 @@
-[day4](https://adventofcode.com/2020/day/4)
+[day 5](https://adventofcode.com/2020/day/5)
 
 ```
---- Day 4: Passport Processing ---
-You arrive at the airport only to realize that you grabbed your North Pole Credentials instead of your passport. While these documents are extremely similar, North Pole Credentials aren't issued by a country and therefore aren't actually valid documentation for travel in most of the world.
+--- Day 5: Binary Boarding ---
+You board your plane only to discover a new problem: you dropped your boarding pass! You aren't sure which seat is yours, and all of the flight attendants are busy with the flood of people that suddenly made it through passport control.
 
-It seems like you're not the only one having problems, though; a very long line has formed for the automatic passport scanners, and the delay could upset your travel itinerary.
+You write a quick program to use your phone's camera to scan all of the nearby boarding passes (your puzzle input); perhaps you can find your seat through process of elimination.
 
-Due to some questionable network security, you realize you might be able to solve both of these problems at the same time.
+Instead of zones or groups, this airline uses binary space partitioning to seat people. A seat might be specified like FBFBBFFRLR, where F means "front", B means "back", L means "left", and R means "right".
 
-The automatic passport scanners are slow because they're having trouble detecting which passports have all required fields. The expected fields are as follows:
+The first 7 characters will either be F or B; these specify exactly one of the 128 rows on the plane (numbered 0 through 127). Each letter tells you which half of a region the given seat is in. Start with the whole list of rows; the first letter indicates whether the seat is in the front (0 through 63) or the back (64 through 127). The next letter indicates which half of that region the seat is in, and so on until you're left with exactly one row.
 
-byr (Birth Year)
-iyr (Issue Year)
-eyr (Expiration Year)
-hgt (Height)
-hcl (Hair Color)
-ecl (Eye Color)
-pid (Passport ID)
-cid (Country ID)
-Passport data is validated in batch files (your puzzle input). Each passport is represented as a sequence of key:value pairs separated by spaces or newlines. Passports are separated by blank lines.
+For example, consider just the first seven characters of FBFBBFFRLR:
 
-Here is an example batch file containing four passports:
+Start by considering the whole range, rows 0 through 127.
+F means to take the lower half, keeping rows 0 through 63.
+B means to take the upper half, keeping rows 32 through 63.
+F means to take the lower half, keeping rows 32 through 47.
+B means to take the upper half, keeping rows 40 through 47.
+B keeps rows 44 through 47.
+F keeps rows 44 through 45.
+The final F keeps the lower of the two, row 44.
+The last three characters will be either L or R; these specify exactly one of the 8 columns of seats on the plane (numbered 0 through 7). The same process as above proceeds again, this time with only three steps. L means to keep the lower half, while R means to keep the upper half.
 
-ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
-byr:1937 iyr:2017 cid:147 hgt:183cm
+For example, consider just the last 3 characters of FBFBBFFRLR:
 
-iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
-hcl:#cfa07d byr:1929
+Start by considering the whole range, columns 0 through 7.
+R means to take the upper half, keeping columns 4 through 7.
+L means to take the lower half, keeping columns 4 through 5.
+The final R keeps the upper of the two, column 5.
+So, decoding FBFBBFFRLR reveals that it is the seat at row 44, column 5.
 
-hcl:#ae17e1 iyr:2013
-eyr:2024
-ecl:brn pid:760753108 byr:1931
-hgt:179cm
+Every seat also has a unique seat ID: multiply the row by 8, then add the column. In this example, the seat has ID 44 * 8 + 5 = 357.
 
-hcl:#cfa07d eyr:2025 pid:166559648
-iyr:2011 ecl:brn hgt:59in
-The first passport is valid - all eight fields are present. The second passport is invalid - it is missing hgt (the Height field).
+Here are some other boarding passes:
 
-The third passport is interesting; the only missing field is cid, so it looks like data from North Pole Credentials, not a passport at all! Surely, nobody would mind if you made the system temporarily ignore missing cid fields. Treat this "passport" as valid.
+BFFFBBFRRR: row 70, column 7, seat ID 567.
+FFFBBBFRRR: row 14, column 7, seat ID 119.
+BBFFBBFRLL: row 102, column 4, seat ID 820.
+As a sanity check, look through your list of boarding passes. What is the highest seat ID on a boarding pass?
 
-The fourth passport is missing two fields, cid and byr. Missing cid is fine, but missing any other field is not, so this passport is invalid.
+Your puzzle answer was 998.
 
-According to the above rules, your improved system would report 2 valid passports.
-
-Count the number of valid passports - those that have all required fields. Treat cid as optional. In your batch file, how many passports are valid?
+The first half of this puzzle is complete! It provides one gold star: *
 
 --- Part Two ---
-The line is moving more quickly now, but you overhear airport security talking about how passports with invalid data are getting through. Better add some data validation, quick!
+Ding! The "fasten seat belt" signs have turned on. Time to find your seat.
 
-You can continue to ignore the cid field, but each other field has strict rules about what values are valid for automatic validation:
+It's a completely full flight, so your seat should be the only missing boarding pass in your list. However, there's a catch: some of the seats at the very front and back of the plane don't exist on this aircraft, so they'll be missing from your list as well.
 
-byr (Birth Year) - four digits; at least 1920 and at most 2002.
-iyr (Issue Year) - four digits; at least 2010 and at most 2020.
-eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
-hgt (Height) - a number followed by either cm or in:
-If cm, the number must be at least 150 and at most 193.
-If in, the number must be at least 59 and at most 76.
-hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
-ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
-pid (Passport ID) - a nine-digit number, including leading zeroes.
-cid (Country ID) - ignored, missing or not.
-Your job is to count the passports where all required fields are both present and valid according to the above rules. Here are some example values:
+Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.
 
-byr valid:   2002
-byr invalid: 2003
-
-hgt valid:   60in
-hgt valid:   190cm
-hgt invalid: 190in
-hgt invalid: 190
-
-hcl valid:   #123abc
-hcl invalid: #123abz
-hcl invalid: 123abc
-
-ecl valid:   brn
-ecl invalid: wat
-
-pid valid:   000000001
-pid invalid: 0123456789
-Here are some invalid passports:
-
-eyr:1972 cid:100
-hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
-
-iyr:2019
-hcl:#602927 eyr:1967 hgt:170cm
-ecl:grn pid:012533040 byr:1946
-
-hcl:dab227 iyr:2012
-ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
-
-hgt:59cm ecl:zzz
-eyr:2038 hcl:74454a iyr:2023
-pid:3556412378 byr:2007
-Here are some valid passports:
-
-pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
-hcl:#623a2f
-
-eyr:2029 ecl:blu cid:129 byr:1989
-iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
-
-hcl:#888785
-hgt:164cm byr:2001 iyr:2015 cid:88
-pid:545766238 ecl:hzl
-eyr:2022
-
-iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
-Count the number of valid passports - those that have all required fields and valid values. Continue to treat cid as optional. In your batch file, how many passports are valid?
+What is the ID of your seat?
 ```
