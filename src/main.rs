@@ -7,6 +7,7 @@ mod day2;
 mod day3;
 mod day4;
 mod day5;
+mod day6;
 
 // Times the function call
 macro_rules! timed {
@@ -55,6 +56,11 @@ fn main() {
             timed!(day5::main::solver);
             println!("--Bonus--");
             timed!(day5::main::solver_extra);
+        }
+        6 => {
+            timed!(day6::main::solver);
+            println!("--Bonus--");
+            timed!(day6::main::solver_extra);
         }
         _ => {
             println!("Problem {} is not available yet", problem_number);
